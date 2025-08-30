@@ -1,7 +1,4 @@
-$simpleRailwayJson = @'
 {
   "$schema": "https://railway.app/railway.schema.json"
 }
-'@
 
-Set-Content -Path "backend/railway.json" -Value $simpleRailwayJson
