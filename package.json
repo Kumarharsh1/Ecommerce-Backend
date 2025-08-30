@@ -14,12 +14,21 @@
     "npm": ">=8.0.0"
   },
   "dependencies": {
+<<<<<<< HEAD
     "express": "^5.1.0",
     "mongoose": "^8.0.3",
     "dotenv": "^17.2.1",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
+=======
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3",
+    "dotenv": "^16.3.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.4",
+>>>>>>> 0e8c274e17711dbcc31a6b91dd47cbe33a977131
     "cors": "^2.8.5"
   },
   "devDependencies": {
