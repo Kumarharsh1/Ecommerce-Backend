@@ -1,4 +1,3 @@
-# Create a fresh, updated package.json
 $updatedPackageJson = @{
   name = "backend"
   version = "1.0.0"
@@ -14,21 +13,21 @@ $updatedPackageJson = @{
     node = ">=18.0.0"
     npm = ">=8.0.0"
   }
-  dependencies = @{
+  dependencies = [ordered]@{
     express = "^4.18.2"
     mongoose = "^8.0.3"
     dotenv = "^16.3.1"
     bcryptjs = "^2.4.3"
     jsonwebtoken = "^9.0.2"
-    multer = "^2.0.0"  # Updated to latest version
+    multer = "^2.0.0"
     cors = "^2.8.5"
   }
-  devDependencies = @{
+  devDependencies = [ordered]@{
     nodemon = "^3.0.1"
   }
 }
 
-# Save the updated package.json
-$updatedPackageJson | ConvertTo-Json -Depth 10 | Set-Content -Path "backend/package.json"
+# Convert to JSON with proper formatting
+$updatedPackageJson | ConvertTo-Json -Depth 10 | Set-Content -Path "./package.json"
 
-Write-Host "✅ Created updated package.json with correct multer version" -ForegroundColor Green
+Write-Host "✅ Created updated package.json with correct structure" -ForegroundColor Green
