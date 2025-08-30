@@ -1,4 +1,9 @@
-﻿{
+# Remove the existing faulty file first (if it exists)
+Remove-Item -Path "backend/railway.json" -Force -ErrorAction SilentlyContinue
+
+# Create a new, correct railway.json file
+$railwayJsonContent = @'
+{
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "nixpacks",
@@ -10,3 +15,19 @@
     "restartPolicyMaxRetries": 10
   }
 }
+'@
+
+# Create the file
+Set-Content -Path "backend/railway.json" -Value $railwayJsonContent
+
+# Verify the JSON is valid
+try {
+    $json = Get-Content -Path "backend/railway.json" -Raw | ConvertFrom-Json
+    Write-Host "✅ railway.json has valid JSON format" -ForegroundColor Green
+} catch {
+    Write-Host "❌ JSON is still invalid: $($_.Exception.Message)" -ForegroundColor Red
+}
+
+# Show the file content
+Write-Host "📋 Contents of railway.json:" -ForegroundColor Yellow
+Get-Content -Path "backend/railway.json"
