@@ -31,6 +31,21 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Root endpoint - shows API information
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Backend API is running!',
+    endpoints: {
+      health: '/health',
+      users: '/api/users',
+      products: '/api/products',
+      orders: '/api/orders',
+      test: '/test'
+    },
+    documentation: 'Use the endpoints above to interact with the API'
+  });
+});
+
 // DEBUG: Test if basic server works first
 console.log('Testing basic server functionality...');
 app.get('/test', (req, res) => {
@@ -72,11 +87,6 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
   });
-} else {
-  // Test route for development
-  app.get('/', (req, res) => {
-    res.send('API is running...');
-  });
 }
 
 // Get port from environment variable (Railway provides this)
@@ -99,6 +109,7 @@ mongoose.connect(MONGO_URI)
       console.log(`📋 Orders API: http://localhost:${PORT}/api/orders`);
       console.log(`❤️ Health check: http://localhost:${PORT}/health`);
       console.log(`🧪 Test route: http://localhost:${PORT}/test`);
+      console.log(`🏠 Root endpoint: http://localhost:${PORT}/`);
     });
 
     // Better error handling for server
