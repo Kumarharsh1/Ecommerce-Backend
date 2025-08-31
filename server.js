@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const path = require('path'); // Add this import
+const path = require('path');
 
 // Load environment variables
 dotenv.config();
@@ -22,11 +22,6 @@ app.use(cors({
 // Other middleware
 app.use(express.json());
 
-// Routes
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/products', require('./routes/productRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
-
 // Health check endpoint (IMPORTANT for Railway)
 app.get('/health', (req, res) => {
   res.status(200).json({ 
@@ -35,6 +30,40 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// DEBUG: Test if basic server works first
+console.log('Testing basic server functionality...');
+app.get('/test', (req, res) => {
+  res.send('Basic server test OK');
+});
+
+// DEBUG: Load routes with logging to identify the problematic one
+try {
+  console.log('Loading user routes...');
+  app.use('/api/users', require('./routes/userRoutes'));
+  console.log('✅ User routes loaded successfully');
+} catch (error) {
+  console.error('❌ ERROR loading user routes:', error.message);
+  process.exit(1);
+}
+
+try {
+  console.log('Loading product routes...');
+  app.use('/api/products', require('./routes/productRoutes'));
+  console.log('✅ Product routes loaded successfully');
+} catch (error) {
+  console.error('❌ ERROR loading product routes:', error.message);
+  process.exit(1);
+}
+
+try {
+  console.log('Loading order routes...');
+  app.use('/api/orders', require('./routes/orderRoutes'));
+  console.log('✅ Order routes loaded successfully');
+} catch (error) {
+  console.error('❌ ERROR loading order routes:', error.message);
+  process.exit(1);
+}
 
 // Serve static files in production (if serving frontend from backend)
 if (process.env.NODE_ENV === 'production') {
@@ -62,12 +91,14 @@ mongoose.connect(MONGO_URI)
     console.log('Connected to MongoDB successfully!');
     
     // Start the server
-    const server = app.listen(PORT, '0.0.0.0', () => { // Listen on all interfaces
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`✅ Server is running on port ${PORT}`);
       console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`👤 User API: http://localhost:${PORT}/api/users`);
       console.log(`📦 Products API: http://localhost:${PORT}/api/products`);
+      console.log(`📋 Orders API: http://localhost:${PORT}/api/orders`);
       console.log(`❤️ Health check: http://localhost:${PORT}/health`);
+      console.log(`🧪 Test route: http://localhost:${PORT}/test`);
     });
 
     // Better error handling for server
@@ -75,7 +106,7 @@ mongoose.connect(MONGO_URI)
       console.error('❌ Server error:', error);
       if (error.code === 'EADDRINUSE') {
         console.log(`Port ${PORT} is already in use. Trying another port...`);
-        app.listen(0); // Let Railway assign a port
+        app.listen(0);
       }
     });
   })
